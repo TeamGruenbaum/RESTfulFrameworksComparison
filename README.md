@@ -8,6 +8,7 @@ For this purpose, a specification for a fictitious RESTful web service for libra
 - Go with Gin
 
 The project was originally created as part of our bachelor thesis (LINK), which can also be found on GitHub. It compares the advantages and disadvantages of the frameworks in German. However, the code can also be viewed separately.
+<br><br>
 
 ## Developers
 - [Steven Solleder](https://github.com/stevensolleder): C# with ASP.NET Core, Go with Gin
