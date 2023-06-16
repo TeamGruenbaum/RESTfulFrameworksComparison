@@ -1,0 +1,19 @@
+{
+  "name": "expressjs_libraryapi",
+  "version": "1.0.0",
+  "description": "Example REST api for a library written in TypeScript with Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node ./dist/index.js",
+    "build": "npx tsc"
+  },
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.18.2",
+    "mariadb": "3.0.2",
+    "typescript": "^4.9.4",
+    "@types/express": "^4.17.16"
+  }
+}

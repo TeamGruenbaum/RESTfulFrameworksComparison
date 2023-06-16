@@ -1,0 +1,5 @@
+[GIN-debug] POST   /v1/books                 --> gin_libraryapi/controllers.CreateBook (3 handlers)
+[GIN-debug] GET    /v1/books                 --> gin_libraryapi/controllers.GetBooks (3 handlers)
+[GIN-debug] GET    /v1/books/:id             --> gin_libraryapi/controllers.GetBook (3 handlers)
+[GIN-debug] PATCH  /v1/books/:id             --> gin_libraryapi/controllers.UpdateBooks (3 handlers)
+[GIN-debug] DELETE /v1/books/:id             --> gin_libraryapi/controllers.DeleteBooks (3 handlers)
