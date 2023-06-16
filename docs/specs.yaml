@@ -1,0 +1,270 @@
+openapi: '3.0.0'
+info:
+  title: Library API
+  description: The Library API is intended to illustrate typical requirements of RESTful web services. It can be used to manage various books.
+  version: '1.0.0'
+tags:
+  - name: Books
+    description: Endpoints concerning books
+paths:
+  /v1/books:
+    post:
+      tags:
+        - Books
+      summary: Create a new book.
+      requestBody:
+        $ref: '#/components/requestBodies/CreateBook'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - Books
+      summary: Get all books ordered by id and optionally filtered.
+      parameters:
+        - in: query
+          name: query
+          description: Term to look for in all attributes.
+          required: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 30
+        - in: query
+          name: page
+          description: Number of page to retrieve.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: per_page
+          description: Number of records per page.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BooksResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Get a book by its id.
+      parameters:
+        -  in: path
+           name: id
+           description: The id of the book to retrieve.
+           required: true
+           schema:
+             type: integer
+             minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Update a book by its id.
+      tags:
+        - Books
+      parameters:
+        - in: path
+          name: id
+          description: The id of the book to update.
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateBook'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Books
+      summary: Delete a book by its id.
+      parameters:
+        -  in: query
+           name: id
+           description: Id of the book to delete.
+           required: true
+           schema:
+             type: integer
+             minimum: 0
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 0
+        isbn:
+          type: string
+          pattern: '^(978-?|979-?)?\d{1,5}-?\d{1,7}-?\d{1,6}-?\d{1,3}$'
+        title:
+          type: string
+          minLength: 1
+          maxLength: 300
+        author:
+          type: string
+          minLength: 1
+          maxLength: 100
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          minLength: 1
+    ErrorsResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+    BooksResponse:
+      type: object
+      properties:
+        maximumPage:
+          type: integer
+          minimum: 1
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+    IdResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 0
+  requestBodies:
+    CreateBook:
+      description: The data necessary to create a book.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - isbn
+              - title
+              - author
+            properties:
+              isbn:
+                type: string
+                pattern: '^(978-?|979-?)?\d{1,5}-?\d{1,7}-?\d{1,6}-?\d{1,3}$'
+              title:
+                type: string
+                minLength: 1
+                maxLength: 300
+              author:
+                type: string
+                minLength: 1
+                maxLength: 100
+    UpdateBook:
+      description: The data necessary to update a book.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              isbn:
+                type: string
+                pattern: '^(978-?|979-?)?\d{1,5}-?\d{1,7}-?\d{1,6}-?\d{1,3}$'
+              title:
+                type: string
+                minLength: 1
+                maxLength: 300
+              author:
+                type: string
+                minLength: 1
+                maxLength: 100
+
+# TODO 200 oder 204 bei Delete? Text im Body mitschicken?
+# TODO Dateiuplods
